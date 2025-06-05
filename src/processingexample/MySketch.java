@@ -34,7 +34,7 @@ public class MySketch extends PApplet {
   }
   
   public void draw(){
-      // Home Page
+      // Home Pagehjkhkhjkhj
       if (screen == 1){
         background(bg);
       }
