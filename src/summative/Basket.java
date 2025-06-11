@@ -55,4 +55,12 @@ public class Basket extends Things{
         x -= 5;
     }
     
+    /*
+    * Method to draw the basket on the screen with the name basket
+    */
+    @Override
+    public void draw(){
+        app.image(image,x,y);
+        app.text("Basket", x + 20, y - 3);
+    }
 }

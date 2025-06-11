@@ -2,11 +2,12 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
+// Imports
 package summative;
 import processing.core.PApplet;
 import processing.core.PImage;
 /**
- *
+ * This class is used to display the person and the basket together
  * @author 342335817
  */
 public class PersonBasket extends Person{
@@ -25,9 +26,10 @@ public class PersonBasket extends Person{
     @Override
     public void draw(){
         super.draw();
+        // Displays the basket on the persons chest to carry
         dateBasket.x = this.x + 20;
         dateBasket.y = this.y + 20;
-        dateBasket.draw();
+        dateBasket.app.image(dateBasket.image,dateBasket.x,dateBasket.y);
     }
     
     /*
@@ -39,6 +41,6 @@ public class PersonBasket extends Person{
         app.text(getName(), x, y - 8);
         dateBasket.x = x + 20;
         dateBasket.y = y + 25;
-        dateBasket.draw();
+        dateBasket.app.image(dateBasket.image,dateBasket.x,dateBasket.y);
     }
 }

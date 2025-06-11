@@ -22,11 +22,18 @@ public class Person extends Things{
         this.width = image.width;
         this.height = image.height;
     }
+    
+    public Person(PApplet p){
+        super(p, 0, 0, "images/person.png");
+        this.name = "Unknown";
+        this.width = image.width;
+        this.height = image.height;
+    }
      
     
     /*
     * Method is used for collision detection
-    * @param - has the parameter of a Person object for collision detection
+    * @param - has the parameter of a things object for collision detection
     */ 
     public boolean isCollidingWith(Things other){
         boolean isLeftOfOtherRight = x + width > other.x;
@@ -45,14 +52,6 @@ public class Person extends Things{
     public void move(int dx, int dy){
         x += dx;
         y += dy;
-    }
-    
-     /*
-    * Method is used to move the peson on the screen with set speed
-    */
-    public void move(){
-        x += 5;
-        y += 5;
     }
     
     /*

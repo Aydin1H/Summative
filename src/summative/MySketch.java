@@ -3,7 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 
-//imports
+// Imports
 package summative;
 import processing.core.PApplet;
 import processing.core.PImage;
@@ -16,31 +16,30 @@ import java.io.*;
 * @author Aydin Hussain
 */
 public class MySketch extends PApplet { 
-  // Objets
+  // Objects
   private Person person;
   private Things door;
-  private Basket basket;
+  private Things basket;
   private PersonBasket personBasket;
+  private Things homeless[][] = new Things[2][4];
+  private Things date[] = new Things[4];
   // Used arraylist to get a list of dates https://www.w3schools.com/java/java_arraylist.asp
   ArrayList<Dates> fallingDates;
-  int score = 0;
-  int gameTimer = 0;
-  boolean gameOver = false;
-  String userInput = "";
-  int stage = 0;
-  boolean showInfo;
-  PImage bg;
-  int screen = 1;
-  int prompt = 0;
-  PImage bg2;
-  // eidMsgs are static because it is the same through all instances of the game and it never changed 
-  static String[] eidMsgs = new String[7];
-  int counter = 0;
-  PImage bg3;
-  private Things homeless[][] = new Things[2][4];
+  // Variable declaration 
+  private int score = 0;
+  private int gameTimer = 0;
+  private boolean gameOver = false;
+  private String userInput = "";
+  private PImage bg;
+  private int screen = 1;
+  private int prompt = 0;
+  private PImage bg2;
+  // EidMsgs are static because it is the same through all instances of the game and it never changed 
+  private static String[] eidMsgs = new String[7];
+  private int counter = 0;
+  private PImage bg3;
   // Sets all values of mans to 0
   private int[] mans = {0,0,0,0};
-  private Things date[] = new Things[4];
   PImage bg4;
   
   /*
@@ -49,15 +48,19 @@ public class MySketch extends PApplet {
   public void settings() {
     size(800, 800);
   }
-
+  
+  /*
+  * Setup class meant as the constructor
+  */
   public void setup() {
-    //background(bg);
+    // Load backgrounds
     bg = loadImage("images/homePage.jpg");
     bg.resize(width,height);
     bg2 = loadImage("images/datesBack.jpg");
     bg2.resize(width,height);
     bg4 = loadImage("images/finished.png");
     bg4.resize(width,height);
+    // Instantiate classes
     person = new Person(this,400,720,"Anonymous", "images/person.png");
     door = new Things(this,350,50,"images/door.png");
     basket = new Basket(this,400,750,"images/basket.png");
@@ -66,6 +69,8 @@ public class MySketch extends PApplet {
         fallingDates.add(new Dates(this, 0, 0, "images/date.png"));
     }
     textSize(20);
+    
+    // Load eid messages
     try { 
         Scanner scanner = new Scanner(new File("EidMessages.txt"));
         while (scanner.hasNextLine()){
@@ -80,6 +85,8 @@ public class MySketch extends PApplet {
     }
     bg3 = loadImage("images/handingDatesBg.jpg");
     bg3.resize(width,height);
+    
+    // Instantiate all homeless
     homeless[0][0] = new Things(this,20,20,"images/homelessSad.png");
     homeless[0][1] = new Things(this,720,20,"images/homelessSad.png");
     homeless[0][2] = new Things(this,20,720,"images/homelessSad.png");
@@ -88,12 +95,18 @@ public class MySketch extends PApplet {
     homeless[1][1] = new Things(this,720,20,"images/homelessHappy.png");
     homeless[1][2] = new Things(this,20,720,"images/homelessHappy.png");
     homeless[1][3] = new Things(this,720,720,"images/homelessHappy.png");
+    
+    // Resize all homeless
     for (int n = 0; n < 2; n ++){
         for (int p = 0; p < 4; p ++){
             homeless[n][p].resize(100,100);
       }
     }
+    
+    //Instantiate
     personBasket = new PersonBasket(this,400,400, "Anonymous", "images/person.png", "images/basketDates.png");
+    
+    // Instantiate and resize dates
     date[0] = new Things(this, 30,30,"images/date.png");
     date[0].resize(30,30);
     date[1] = new Things(this, 730,30,"images/date.png");
@@ -102,11 +115,10 @@ public class MySketch extends PApplet {
     date[2].resize(30,30);
     date[3] = new Things(this, 730,730,"images/date.png");
     date[3].resize(30,30);
-
   }
   
   /*
-  * Method made to use to detect the enter button
+  * Method made to detect the enter button
   */
   public void keyPressed(){
       //Cannot use in draw because it runs 60 times a minute leading to errors
@@ -123,7 +135,7 @@ public class MySketch extends PApplet {
   }
   
   /*
-  * Checks if there is collisions
+  * Checks if there is collisions with the person and door
   */
   public void drawCollisions(){
       if (person.isCollidingWith(door) && screen < 2){
@@ -137,7 +149,7 @@ public class MySketch extends PApplet {
   */
   public void homelessCollisions(Things a, int index){
       if (personBasket.isCollidingWith(a) && screen == 3){
-          mans[index] = 1;
+          mans[index] = 1; // Changes the mans index to update the homeless picture
       }
   }
   
@@ -167,30 +179,33 @@ public class MySketch extends PApplet {
   */
   
   public void draw(){
-      // Home Page
+      // Switch statement to display the backgrounds
       switch (screen){
           case 1:
               background(bg);
               break;
               
           case 2:
+            // Checks if the catching dates in basket is still running
             if (!gameOver){  
                 background(bg2);
+                // Displays a timer
                 int timeLeft = max(0, 20 - gameTimer / 60);
                 textSize(20);
                 text("Time Left: " + timeLeft + "s", 20, 70);
                 gameTimer ++;
                 basket.draw();
-
+              // For basket movement
               if (keyPressed){
-                  if (keyCode == LEFT) basket.moveLeft();
-                  if (keyCode == RIGHT) basket.moveRight();
+                  if (keyCode == LEFT) ((Basket)basket).moveLeft();
+                  if (keyCode == RIGHT)((Basket)basket).moveRight();
               }
-
+              
+              // Gets all the dates from the date list and draws it and checks if its caught
               for (Dates d : fallingDates){
                   d.update();
                   d.draw();
-                  if (d.isCaught(basket)){
+                  if (d.isCaught(((Basket)basket))){
                       score++;
                       d.caught();
                   }
@@ -200,6 +215,8 @@ public class MySketch extends PApplet {
               if (gameTimer >= 60 * 20){
                   gameOver = true;
                   prompt ++; 
+                  
+                  // Try-catch statement to write it to the file
                   try {
                       FileWriter writer = new FileWriter("score.txt", true);
                       PrintWriter printwriter = new PrintWriter(writer);
@@ -213,7 +230,7 @@ public class MySketch extends PApplet {
               }
             
             }
-       
+            // Checks if the basket date catching game is over
             else {
                 background(bg2);
                 try{
@@ -246,6 +263,7 @@ public class MySketch extends PApplet {
                 catch (Exception e){
                     System.out.println("Unable to read file");
                 }
+                // Checks user input for enter
                 if (keyPressed){
                     if (key == '\n' || key == '\r'){ // On windows Enter is \r and in mac it's \n
                         screen ++;
@@ -254,10 +272,14 @@ public class MySketch extends PApplet {
                 }
             }
                 break;
+                
           case 3:
+              // Game for delivering the dates to the homeless
               background(bg3);
               // Give dates to homeless sad and turn them into happy with dates
               personBasket.draw();
+              
+              // Input detection for movement
               if (keyPressed){
                 if (keyCode == LEFT){
                     personBasket.move(-5,0);
@@ -272,7 +294,7 @@ public class MySketch extends PApplet {
                     personBasket.move(0,5);
                 }
                }
-              
+              // Draws the homeless on the screen
               for (int i = 0; i < 4; i++) {
                 if (mans[i] == 0) {
                     homeless[0][i].draw();
@@ -282,6 +304,8 @@ public class MySketch extends PApplet {
                     date[i].draw();
                 }
                }   
+              
+              // Checks if all homeless people have received their dates
               boolean allMansHappy = true;
               for (int l = 0; l < mans.length; l++){
                   if(mans[l] != 1){
@@ -289,7 +313,7 @@ public class MySketch extends PApplet {
                       break;
                   }
               }
-              
+              // Goes to the next background and promp
               if (allMansHappy){
                   screen ++;
                   prompt ++;
@@ -297,13 +321,14 @@ public class MySketch extends PApplet {
               break;
               
           case 4:
-              background(bg3);
+              // If all the homeless have dates 
+               background(bg3);
                personBasket.draw(350,350);
                for (int i = 0; i < 4; i++) {
                    homeless[1][i].draw();
                    date[i].draw();
                }
-               
+               // Checks for input for enter
                if (keyPressed){
                     if (key == '\n' || key == '\r'){ // On windows Enter is \r and in mac it's \n
                         screen ++;
@@ -313,30 +338,37 @@ public class MySketch extends PApplet {
                break;
               
           case 5:
+              // For the end screen
               background(bg4);
               break;
       }
       
+      // Switch statements for all the messages
       switch (prompt){
+          // Used for the user to enter their name
           case 0:
               text("Enter Name: ", 20,100);
               text(userInput, 130, 100);
               break;
               
+          // Displays the eid messages and sets the user's name    
           case 1:
               person.setName(userInput);
               personBasket.setName(userInput);
               text(eidMsgs[0] + "\n" + eidMsgs[1] + "\n" + eidMsgs[2],20,100);
               break;
               
+          // Displays eid messages
           case 2: 
               text(eidMsgs[3] + "\n" + eidMsgs[4] + "\n" + eidMsgs[5], 20, 100);
               break;
               
+          // Displays eid messages    
           case 3:
               text(eidMsgs[6], 20, 100);
               break;
-              
+          
+          // Promps user to enter the door
           case 4:
               text("Enter the door to continue", 300,40);
               person.draw();   
@@ -344,7 +376,8 @@ public class MySketch extends PApplet {
               door.draw();
               movement();
               break;
-              
+          
+          // Promps user to collect dates and shows dates collected
           case 5:
               textSize(35);
               text("Collect dates for ramadan", 230, 100);
@@ -352,6 +385,7 @@ public class MySketch extends PApplet {
               text("Dates collected: " + score,20,50);
               break;
               
+          // Tells user the game is over and shows the game history
           case 6:
               textSize(20);
               text("Game Over", 20,40);
@@ -359,16 +393,19 @@ public class MySketch extends PApplet {
               text("History: (Press enter to continue)", 300, 40);
               break;
               
+          // Promps user to give dates to all the homeless people 
           case 7:
               textSize(35);
               text("Give all the homeless people the dates you collected", 20,200);
               break;
           
+          // Tells user they succesfully fed all homeless people
           case 8:
               text("All the homeless have food because of you!", 100, 200);
               text("Press 'enter' to continue", 100,250);
               break;
           
+          // Thanks the user for playing the game
           case 9:
               text("Thank you for playing my game and \n learning about Ramadan!",100, 300);
               break;

@@ -2,11 +2,12 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
+// Imports
 package summative;
 import processing.core.PApplet;
 import processing.core.PImage;
 /**
- *
+ * This class is to create images to be drawn on the screen
  * @author tpss8
  */
 public class Things {
@@ -24,6 +25,7 @@ public class Things {
         this.width = image.width;
         this.height = image.height;
     }    
+    
     /*
     * Method is used to draw the image on the screen
     */

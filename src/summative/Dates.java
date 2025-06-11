@@ -7,14 +7,15 @@ package summative;
 import processing.core.PApplet;
 import processing.core.PImage;
 
-/**
- *
+/*
+ * This class is used to display falling dates from the sky to be collected
  * @author 342335817
  */
 public class Dates extends Things {
+    // Variable declaration
     private float speed;
     private int delayFrames;  // frames to wait before falling
-    private int timer;        // counts frames elapsed
+    private int timer;        // counts frames 
     private boolean caught = false;
     private int datesCaught = 0;
 
@@ -43,26 +44,34 @@ public class Dates extends Things {
     }
     
     /*
-    * This method is to randomly spawn dates based on a random timing. Used timer from https://docs.oracle.com/javase/8/docs/api/java/util/Timer.html
+    * This method is used to drop the dates when the timer reaches delayFrames https://docs.oracle.com/javase/8/docs/api/java/util/Timer.html
     */
     public void update(){
+        // If timer is greater than the delay frames then it drops the date
         if (timer >= delayFrames){
             y += speed;
             if (y > app.height + height){
                 reset();
-            }
-        } else {
+            }        
+        } 
+        else {
             timer++;
         }
     }
 
+    /*
+    * Draws the date on the screen if it is not caught and if the timer is greater than delay frames
+    */
     @Override
     public void draw(){
         if (!caught && timer >= delayFrames){
             super.draw();
         }
     }
-
+    
+    /*
+    * Checks if the date is caught (caught is false until it's true when it's in the basket)
+    */
     public boolean isCaught(Basket basket){
         if (caught || timer < delayFrames) {
             return false;
@@ -71,12 +80,13 @@ public class Dates extends Things {
         return x + width > basket.x && x < basket.x + basket.width &&
                y + height > basket.y && y < basket.y + basket.height;
     }
-
+    
+    /*
+    * Method to change the dates to caught
+    */
     public void caught(){
         caught = true;
         datesCaught ++;
         reset();
-    }
-    
-    
+    }   
 }
